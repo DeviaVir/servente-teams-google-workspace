@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	sdk "github.com/DeviaVir/servente-sdk"
@@ -86,8 +85,6 @@ func (app *application) teamsMembership(w http.ResponseWriter, r *http.Request) 
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-
-	fmt.Println("member: ", member)
 
 	nextPageToken, _, err := app.parseDefaultRequest(r)
 	if err != nil {

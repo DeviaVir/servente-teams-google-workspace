@@ -9,8 +9,10 @@ import (
 	"os"
 	"time"
 
+	"golang.org/x/net/context"
 	"golang.org/x/oauth2/google"
 	admin "google.golang.org/api/admin/directory/v1"
+	"google.golang.org/api/option"
 )
 
 type contextKey string
@@ -39,14 +41,15 @@ func main() {
 
 	b, err := ioutil.ReadFile(*credentialsPath)
 	if err != nil {
-		errorLog.Fatalf("credentials: Unable to read credentials JSON (%s) %v", credentialsPath, err)
+		errorLog.Fatalf("credentials: Unable to read credentials JSON (%s) %v", *credentialsPath, err)
 	}
 	config, err := google.ConfigFromJSON(b, admin.AdminDirectoryGroupReadonlyScope)
 	if err != nil {
 		errorLog.Fatalf("credentials: unable to parse client secret file to config: %v", err)
 	}
 	client := getClient(config, errorLog)
-	adminService, err := admin.New(client)
+	ctx := context.Background()
+	adminService, err := admin.NewService(ctx, option.WithHTTPClient(client), option.WithScopes(admin.AdminDirectoryGroupReadonlyScope))
 	if err != nil {
 		errorLog.Fatalf("credentials: unable retrieve directory: %v", err)
 	}
