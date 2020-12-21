@@ -5,6 +5,9 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(realpath $(MKFILE_PATH))))
 # Ensure GOPATH
 GOPATH ?= $(HOME)/go
 
+# List all our actual files, excluding vendor
+GOFILES ?= $(shell go list $(TEST) | grep -v /vendor/)
+
 # Tags specific for building
 GOTAGS ?=
 
@@ -66,9 +69,10 @@ define make-xc-target
 				go build \
 				  -mod vendor \
 				  -a \
-					-o="pkg/${1}_${2}/${NAME}_v${VERSION}${3}" \
+					-o="output/${1}_${2}/${NAME}_v${VERSION}${3}" \
 					-ldflags "${LD_FLAGS}" \
-					-tags "${GOTAGS}"
+					-tags "${GOTAGS}" \
+					./...
   endif
   .PHONY: $1/$2
 
@@ -126,14 +130,14 @@ endif
 
 # _cleanup removes any previous binaries
 _cleanup:
-	@rm -rf "${CURRENT_DIR}/pkg/"
+	@rm -rf "${CURRENT_DIR}/output/"
 	@rm -rf "${CURRENT_DIR}/bin/"
 .PHONY: _cleanup
 
-# _compress compresses all the binaries in pkg/* as zip.
+# _compress compresses all the binaries in output/* as zip.
 _compress:
-	@mkdir -p "${CURRENT_DIR}/pkg/dist"
-	@for platform in $$(find ./pkg -mindepth 1 -maxdepth 1 -type d); do \
+	@mkdir -p "${CURRENT_DIR}/output/dist"
+	@for platform in $$(find ./output -mindepth 1 -maxdepth 1 -type d); do \
 		osarch=$$(basename "$$platform"); \
 		if [ "$$osarch" = "dist" ]; then \
 			continue; \
@@ -144,15 +148,15 @@ _compress:
 			ext=".exe"; \
 		fi; \
 		cd "$$platform"; \
-		zip -q "${CURRENT_DIR}/pkg/dist/${NAME}_${VERSION}_$${osarch}.zip" "${NAME}_v${VERSION}$${ext}"; \
+		zip -q "${CURRENT_DIR}/output/dist/${NAME}_${VERSION}_$${osarch}.zip" "${NAME}_v${VERSION}$${ext}"; \
 		cd - &>/dev/null; \
 	done
 .PHONY: _compress
 
-# _checksum produces the checksums for the binaries in pkg/dist
+# _checksum produces the checksums for the binaries in output/dist
 _checksum:
-	@cd "${CURRENT_DIR}/pkg/dist" && \
-		shasum --algorithm 256 * > ${CURRENT_DIR}/pkg/dist/${NAME}_${VERSION}_SHA256SUMS && \
+	@cd "${CURRENT_DIR}/output/dist" && \
+		shasum --algorithm 256 * > ${CURRENT_DIR}/output/dist/${NAME}_${VERSION}_SHA256SUMS && \
 		cd - &>/dev/null
 .PHONY: _checksum
 
@@ -162,7 +166,7 @@ _sign:
 	@echo "==> Signing ${PROJECT} at v${VERSION}"
 	@gpg \
 		--default-key "${GPG_KEY}" \
-		--detach-sig "${CURRENT_DIR}/pkg/dist/${NAME}_${VERSION}_SHA256SUMS"
+		--detach-sig "${CURRENT_DIR}/output/dist/${NAME}_${VERSION}_SHA256SUMS"
 	@git commit \
 		--allow-empty \
 		--gpg-sign="${GPG_KEY}" \
