@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"runtime/debug"
 	"time"
 
@@ -109,11 +110,11 @@ func (app *application) parseDefaultRequest(r *http.Request) (string, string, er
 }
 
 // Retrieve a token, saves the token, then returns the generated client.
-func getClient(config *oauth2.Config, errorLog *log.Logger) *http.Client {
+func getClient(config *oauth2.Config, statefulStorage string, errorLog *log.Logger) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "/tmp/servente-teams-google-workspace-token.json"
+	tokFile := filepath.Join(statefulStorage, "servente-teams-google-workspace-token.json")
 	tok, err := tokenFromFile(tokFile)
 	if err != nil {
 		tok = getTokenFromWeb(config, errorLog)

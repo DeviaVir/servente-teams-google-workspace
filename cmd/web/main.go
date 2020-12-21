@@ -34,6 +34,7 @@ func main() {
 	accesskey := flag.String("accessKey", "servente-secret-access-key-001!", "Password to access the API")
 	tlsCertPath := flag.String("tls-cert-path", "./tls/cert.pem", "TLS certificate path")
 	tlsKeyPath := flag.String("tls-key-path", "./tls/key.pem", "TLS key path")
+	statefulStorage := flag.String("stateful-storage", "/tmp", "Path to a directory that is stateful between restarts")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -47,7 +48,7 @@ func main() {
 	if err != nil {
 		errorLog.Fatalf("credentials: unable to parse client secret file to config: %v", err)
 	}
-	client := getClient(config, errorLog)
+	client := getClient(config, *statefulStorage, errorLog)
 	ctx := context.Background()
 	adminService, err := admin.NewService(ctx, option.WithHTTPClient(client), option.WithScopes(admin.AdminDirectoryGroupReadonlyScope))
 	if err != nil {

@@ -20,7 +20,7 @@ PKG_NAME := google-workspace
 PROJECT := github.com/DeviaVir/servente-teams-$(PKG_NAME)
 OWNER := $(notdir $(patsubst %/,%,$(dir $(PROJECT))))
 NAME := $(notdir $(PROJECT))
-VERSION := 0.1.0
+VERSION := 0.1.1
 
 # Current system information
 GOOS ?= $(shell go env GOOS)
