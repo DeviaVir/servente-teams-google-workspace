@@ -116,6 +116,10 @@ else
 endif
 .PHONY: dist
 
+docker: vendor
+	docker build -t "deviavir/servente-teams-google-workspace:${VERSION}" -f docker/Dockerfile .
+	docker push "deviavir/servente-teams-google-workspace:${VERSION}"
+
 # sign in case you were unable to sign during dist
 sign:
 ifndef GPG_KEY
