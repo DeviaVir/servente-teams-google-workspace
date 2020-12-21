@@ -42,20 +42,22 @@ $ go test -short -race -v ./...
 ### Building
 
 ```
-
+$ GPG_KEY=... make dist
 ```
 
 ### Deploying
 
-```
+Bump the release version in the `Makefile`.
 
+```
+$ make docker
 ```
 
 ## API
 
 ```
-$ curl --header "Servente-Access-Key: servente-secret-access-key-001\!" -k "https://127.0.0.1:4001/api/v1/teams/membership?member=chase@blockstream.com" | jq
-$ curl --header "Servente-Access-Key: servente-secret-access-key-001\!" -k "https://127.0.0.1:4001/api/v1/teams/membership/chase@blockstream.com" | jq
+$ curl --header "Servente-Access-Key: servente-secret-access-key-001\!" -k "https://127.0.0.1:4001/api/v1/teams/membership?member=chase@email.com | jq
+$ curl --header "Servente-Access-Key: servente-secret-access-key-001\!" -k "https://127.0.0.1:4001/api/v1/teams/membership/chase@email.com | jq
 $ curl -k https://127.0.0.1:4001/api/v1/teams/list\?servente-access-key\=servente-secret-access-key-001! | jq
 $ curl -k https://127.0.0.1:4001/api\?servente-access-key\=servente-secret-access-key-001! | jq
 ```
