@@ -5,6 +5,23 @@ in this case, `servente-teams-google-workspace` trails Google Workspace's admin
 directory API and returns a list of all teams, and is capable of returning a
 list of all groups (teams) a member (email) is part of.
 
+
+## Docker releases
+
+https://hub.docker.com/r/deviavir/servente-teams-google-workspace
+
+Example run:
+
+```
+$ docker run -it --rm \
+  -v /home/chase/Credentials/credentials.json:/secrets/credentials.json:ro \
+  -v /home/chase/Credentials/tls:/secrets/tls:ro \
+  deviavir/servente-teams-google-workspace:0.1.0 /servente-teams-google-workspace \
+    --credentialsPath=/secrets/credentials.json \
+    --tls-cert-path=/secrets/tls/cert.pem \
+    --tls-key-path=/secrets/tls/key.pem
+```
+
 ## Setup
 
 Find instructions for generating the service account credentials
