@@ -20,7 +20,7 @@ PKG_NAME := google-workspace
 PROJECT := github.com/DeviaVir/servente-teams-$(PKG_NAME)
 OWNER := $(notdir $(patsubst %/,%,$(dir $(PROJECT))))
 NAME := $(notdir $(PROJECT))
-VERSION := 0.1.1
+VERSION := 0.1.2
 
 # Current system information
 GOOS ?= $(shell go env GOOS)
@@ -117,8 +117,8 @@ endif
 .PHONY: dist
 
 docker: vendor
-	docker build -t "deviavir/servente-teams-google-workspace:${VERSION}" -f docker/Dockerfile .
-	docker push "deviavir/servente-teams-google-workspace:${VERSION}"
+	docker build -t "deviavir/servente-teams-${PKG_NAME}:${VERSION}" -f docker/Dockerfile .
+	docker push "deviavir/servente-teams-${PKG_NAME}:${VERSION}"
 
 # sign in case you were unable to sign during dist
 sign:

@@ -18,21 +18,26 @@ $ docker run -it --rm \
   -v /home/chase/Credentials/tls:/secrets/tls:ro \
   deviavir/servente-teams-google-workspace:0.1.0 /servente-teams-google-workspace \
     --credentialsPath=/secrets/credentials.json \
+    --userEmail=user@domain.ext \
     --tls-cert-path=/secrets/tls/cert.pem \
     --tls-key-path=/secrets/tls/key.pem
 ```
 
 ## Setup
 
-Find instructions for generating the service account credentials
-[here](https://developers.google.com/admin-sdk/directory/v1/quickstart/go#step_1_turn_on_the).
+Find instructions for creating a service account configured for access to Google
+Workspaces [here](https://developers.google.com/admin-sdk/directory/v1/guides/delegation).
+
+Make sure to enable the Admin SDK API on the project where you created the
+service account [here](https://console.developers.google.com/apis/library/admin.googleapis.com?project=blockstream-source).
 
 Once configured, you can start this binary with the following options:
 
 ```
 $ ./servente-teams-google-workspace \
   --accessKey=my-secret-password \
-  --credentialsPath=/some/path/credentials.json
+  --credentialsPath=/some/path/credentials.json \
+  --userEmail=user@domain.ext
 ```
 
 The access key is required for all requests to the API this application exposes,
