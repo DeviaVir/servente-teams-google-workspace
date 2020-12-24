@@ -28,6 +28,13 @@ $ docker run -it --rm \
 Find instructions for creating a service account configured for access to Google
 Workspaces [here](https://developers.google.com/admin-sdk/directory/v1/guides/delegation).
 
+Use the following Oauth scopes in the Admin console:
+
+```
+https://www.googleapis.com/auth/admin.directory.group.readonly
+https://www.googleapis.com/auth/admin.directory.group.member.readonly
+```
+
 Make sure to enable the Admin SDK API on the project where you created the
 service account [here](https://console.developers.google.com/apis/library/admin.googleapis.com?project=blockstream-source).
 
